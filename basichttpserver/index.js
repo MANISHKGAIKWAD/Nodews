@@ -6,17 +6,28 @@ function requestHandler(req, res){
     console.log(req.url);
     res.writeHead(200,{'content-type': 'text/html'});
 
-    fs.readFile('./index.html', function(err, data){
+    let filepath;
 
+    switch(req.url){
+        case '/' :
+            filepath = './index.html'
+            break;
+        case '/profile':
+            filepath = './profile.html'
+            break;
+        default:
+            filepath = './404.html'
+    }
+
+    fs.readFile(filepath, function(err, data){
         if(err){
-            console.log(req.url);
-            return res.end('<h1>Error!</h1>');
+
+            console.log('error', err);
+            return res.end('<h1>Error!</h>');
         }
 
-
         return res.end(data);
-    })
-    //res.end('<h1>Gotcha!</h1>');
+    });
 }
 
 const server = http.createServer(requestHandler);
